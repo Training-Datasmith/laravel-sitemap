@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Spatie\Crawler\CrawlProfiles\CrawlInternalUrls;
 use Spatie\Crawler\CrawlProfiles\CrawlSubdomains;
 use Spatie\Sitemap\Crawler\Profile;

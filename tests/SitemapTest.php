@@ -1,16 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Support\Facades\Storage;
 use Spatie\Sitemap\Contracts\Sitemapable;
 use Spatie\Sitemap\Sitemap;
 use Spatie\Sitemap\Tags\Url;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 use function Spatie\Snapshots\assertMatchesXmlSnapshot;
 
+use Symfony\Component\HttpFoundation\Request;
+
+use Symfony\Component\HttpFoundation\Response;
+
 beforeEach(function () {
-    $this->sitemap = new Sitemap;
+    $this->sitemap = new Sitemap();
 });
 
 it('provides a create method', function () {
@@ -155,7 +159,7 @@ test('a url object cannot be added twice to the sitemap', function () {
 test('an instance can return a response', function () {
     $this->sitemap->add(Url::create('/home'));
 
-    expect($this->sitemap->toResponse(new Request))
+    expect($this->sitemap->toResponse(new Request()))
         ->toBeInstanceOf(Response::class);
 });
 
@@ -171,15 +175,13 @@ test('multiple urls can be added in one call', function () {
 
 test('sitemapable object with empty string cannot be added', function () {
     $this->sitemap
-        ->add(new class implements Sitemapable
-        {
+        ->add(new class () implements Sitemapable {
             public function toSitemapTag(): Url|string|array
             {
                 return '';
             }
         })
-        ->add(new class implements Sitemapable
-        {
+        ->add(new class () implements Sitemapable {
             public function toSitemapTag(): Url|string|array
             {
                 return '  ';
@@ -191,22 +193,19 @@ test('sitemapable object with empty string cannot be added', function () {
 
 test('sitemapable object can be added', function () {
     $this->sitemap
-        ->add(new class implements Sitemapable
-        {
+        ->add(new class () implements Sitemapable {
             public function toSitemapTag(): Url|string|array
             {
                 return '/';
             }
         })
-        ->add(new class implements Sitemapable
-        {
+        ->add(new class () implements Sitemapable {
             public function toSitemapTag(): Url|string|array
             {
                 return Url::create('/home');
             }
         })
-        ->add(new class implements Sitemapable
-        {
+        ->add(new class () implements Sitemapable {
             public function toSitemapTag(): Url|string|array
             {
                 return [
@@ -221,22 +220,19 @@ test('sitemapable object can be added', function () {
 
 test('sitemapable objects can be added', function () {
     $this->sitemap->add(collect([
-        new class implements Sitemapable
-        {
+        new class () implements Sitemapable {
             public function toSitemapTag(): Url|string|array
             {
                 return 'blog/post-1';
             }
         },
-        new class implements Sitemapable
-        {
+        new class () implements Sitemapable {
             public function toSitemapTag(): Url|string|array
             {
                 return 'blog/post-2';
             }
         },
-        new class implements Sitemapable
-        {
+        new class () implements Sitemapable {
             public function toSitemapTag(): Url|string|array
             {
                 return 'blog/post-3';

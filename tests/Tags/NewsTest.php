@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Carbon\Carbon;
 use Spatie\Sitemap\Sitemap;
 use Spatie\Sitemap\Tags\News;

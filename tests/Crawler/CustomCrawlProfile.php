@@ -1,12 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Spatie\Sitemap\Test\Crawler;
 
 use Spatie\Crawler\CrawlProfiles\CrawlProfile;
 
 class CustomCrawlProfile implements CrawlProfile
 {
-    public function __construct(protected string $baseUrl) {}
+    public function __construct(protected string $baseUrl)
+    {
+    }
 
     public function shouldCrawl(string $url): bool
     {

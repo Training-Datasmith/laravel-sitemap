@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Spatie\Sitemap\Test;
 
 use Orchestra\Testbench\TestCase as OrchestraTestCase;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Spatie\Sitemap;
 
 use Closure;
@@ -39,7 +41,7 @@ class SitemapGenerator
 
     public function __construct()
     {
-        $this->sitemaps = new Collection([new Sitemap]);
+        $this->sitemaps = new Collection([new Sitemap()]);
 
         $this->hasCrawled = fn (Url $url, ?CrawlResponse $response = null): \Spatie\Sitemap\Tags\Url => $url;
     }
@@ -99,7 +101,7 @@ class SitemapGenerator
 
         if (config('sitemap.execute_javascript')) {
             if ($chromeBinaryPath = config('sitemap.chrome_binary_path')) {
-                $browsershot = new Browsershot;
+                $browsershot = new Browsershot();
                 $browsershot->setChromePath($chromeBinaryPath);
 
                 $crawler->executeJavaScript(
@@ -121,7 +123,7 @@ class SitemapGenerator
                 $sitemapUrl = ($this->hasCrawled)(Url::create($url), $response);
 
                 if ($this->shouldStartNewSitemapFile()) {
-                    $this->sitemaps->push(new Sitemap);
+                    $this->sitemaps->push(new Sitemap());
                 }
 
                 if ($sitemapUrl) {

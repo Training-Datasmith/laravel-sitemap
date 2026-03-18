@@ -1,15 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Support\Facades\Storage;
 use Spatie\Sitemap\SitemapIndex;
 use Spatie\Sitemap\Tags\Sitemap;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 use function Spatie\Snapshots\assertMatchesXmlSnapshot;
 
+use Symfony\Component\HttpFoundation\Request;
+
+use Symfony\Component\HttpFoundation\Response;
+
 beforeEach(function () {
-    $this->index = new SitemapIndex;
+    $this->index = new SitemapIndex();
 });
 
 it('provides a `create` method', function () {
@@ -109,7 +113,7 @@ it('returns null when getting a non-existing sitemap', function () {
 test('an instance can return a response', function () {
     $this->index->add('/sitemap1.xml');
 
-    expect($this->index->toResponse(new Request))->toBeInstanceOf(Response::class);
+    expect($this->index->toResponse(new Request()))->toBeInstanceOf(Response::class);
 });
 
 it('can render a sitemap index with a stylesheet', function () {

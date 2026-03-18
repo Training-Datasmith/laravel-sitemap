@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Spatie\Crawler\Crawler;
 use Spatie\Sitemap\SitemapGenerator;
 use Spatie\Sitemap\Tags\Url;

@@ -1,10 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 use Carbon\Carbon;
-use Spatie\Sitemap\Test\TestCase;
-use Spatie\TemporaryDirectory\TemporaryDirectory;
 
 use function PHPUnit\Framework\assertXmlStringEqualsXmlString;
+
+use Spatie\Sitemap\Test\TestCase;
+
+use Spatie\TemporaryDirectory\TemporaryDirectory;
 
 /*
 |--------------------------------------------------------------------------
@@ -86,7 +90,7 @@ function isTestServerRunning(): bool
 
 function temporaryDirectory(): TemporaryDirectory
 {
-    return (new TemporaryDirectory)->force()->create();
+    return (new TemporaryDirectory())->force()->create();
 }
 
 register_shutdown_function(function () {

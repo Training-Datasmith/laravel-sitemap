@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Spatie\Sitemap;
 
 use Illuminate\Contracts\Support\Renderable;
@@ -19,7 +21,7 @@ class SitemapIndex implements Renderable, Responsable
 
     public static function create(): static
     {
-        return new static;
+        return new static();
     }
 
     public function setStylesheet(string $url): static
@@ -42,7 +44,7 @@ class SitemapIndex implements Renderable, Responsable
 
     public function getSitemap(string $url): ?Sitemap
     {
-        return collect($this->tags)->first(fn(Tag $tag) => $tag->getType() === 'sitemap' && $tag->url === $url);
+        return collect($this->tags)->first(fn (Tag $tag) => $tag->getType() === 'sitemap' && $tag->url === $url);
     }
 
     public function hasSitemap(string $url): bool

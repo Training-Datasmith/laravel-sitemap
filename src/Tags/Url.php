@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Spatie\Sitemap\Tags;
 
 use Carbon\Carbon;
@@ -7,19 +9,19 @@ use DateTimeInterface;
 
 class Url extends Tag
 {
-    const CHANGE_FREQUENCY_ALWAYS = 'always';
+    public const CHANGE_FREQUENCY_ALWAYS = 'always';
 
-    const CHANGE_FREQUENCY_HOURLY = 'hourly';
+    public const CHANGE_FREQUENCY_HOURLY = 'hourly';
 
-    const CHANGE_FREQUENCY_DAILY = 'daily';
+    public const CHANGE_FREQUENCY_DAILY = 'daily';
 
-    const CHANGE_FREQUENCY_WEEKLY = 'weekly';
+    public const CHANGE_FREQUENCY_WEEKLY = 'weekly';
 
-    const CHANGE_FREQUENCY_MONTHLY = 'monthly';
+    public const CHANGE_FREQUENCY_MONTHLY = 'monthly';
 
-    const CHANGE_FREQUENCY_YEARLY = 'yearly';
+    public const CHANGE_FREQUENCY_YEARLY = 'yearly';
 
-    const CHANGE_FREQUENCY_NEVER = 'never';
+    public const CHANGE_FREQUENCY_NEVER = 'never';
 
     public ?Carbon $lastModificationDate = null;
 
@@ -117,7 +119,7 @@ class Url extends Tag
     public function segments(?int $index = null): array|string|null
     {
         $segments = collect(explode('/', $this->path()))
-            ->filter(fn($value) => $value !== '')
+            ->filter(fn ($value) => $value !== '')
             ->values()
             ->toArray();
 
