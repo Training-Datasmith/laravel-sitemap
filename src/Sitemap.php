@@ -75,9 +75,7 @@ class Sitemap implements Renderable, Responsable
 
     public function getUrl(string $url): ?Url
     {
-        return collect($this->tags)->first(function (Tag $tag) use ($url) {
-            return $tag->getType() === 'url' && $tag->url === $url;
-        });
+        return collect($this->tags)->first(fn(Tag $tag) => $tag->getType() === 'url' && $tag->url === $url);
     }
 
     public function hasUrl(string $url): bool

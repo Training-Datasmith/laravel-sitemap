@@ -21,8 +21,6 @@ class Url extends Tag
 
     const CHANGE_FREQUENCY_NEVER = 'never';
 
-    public string $url;
-
     public ?Carbon $lastModificationDate = null;
 
     public ?string $changeFrequency = null;
@@ -46,9 +44,8 @@ class Url extends Tag
         return new static($url);
     }
 
-    public function __construct(string $url)
+    public function __construct(public string $url)
     {
-        $this->url = $url;
     }
 
     public function setUrl(string $url = ''): static
@@ -120,9 +117,7 @@ class Url extends Tag
     public function segments(?int $index = null): array|string|null
     {
         $segments = collect(explode('/', $this->path()))
-            ->filter(function ($value) {
-                return $value !== '';
-            })
+            ->filter(fn($value) => $value !== '')
             ->values()
             ->toArray();
 

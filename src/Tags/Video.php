@@ -22,9 +22,9 @@ class Video
 
     public string $description;
 
-    public ?string $contentLoc;
+    public ?string $contentLoc = null;
 
-    public ?string $playerLoc;
+    public ?string $playerLoc = null;
 
     public array $options;
 

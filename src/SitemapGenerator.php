@@ -41,7 +41,7 @@ class SitemapGenerator
     {
         $this->sitemaps = new Collection([new Sitemap]);
 
-        $this->hasCrawled = fn (Url $url, ?CrawlResponse $response = null) => $url;
+        $this->hasCrawled = fn (Url $url, ?CrawlResponse $response = null): \Spatie\Sitemap\Tags\Url => $url;
     }
 
     public function configureCrawler(Closure $closure): static
@@ -117,7 +117,7 @@ class SitemapGenerator
         $crawler
             ->crawlProfile($this->getCrawlProfile())
             ->concurrency($this->concurrency)
-            ->onCrawled(function (string $url, CrawlResponse $response) {
+            ->onCrawled(function (string $url, CrawlResponse $response): void {
                 $sitemapUrl = ($this->hasCrawled)(Url::create($url), $response);
 
                 if ($this->shouldStartNewSitemapFile()) {
@@ -147,7 +147,7 @@ class SitemapGenerator
             $fileFormat = str_replace('.xml', '_%d.xml', $path);
             $urlFormat = str_replace('.xml', '_%d.xml', $this->toUrlPath($path));
 
-            $this->sitemaps->each(function (Sitemap $item, int $key) use ($sitemap, $fileFormat, $urlFormat) {
+            $this->sitemaps->each(function (Sitemap $item, int $key) use ($sitemap, $fileFormat, $urlFormat): void {
                 $item->writeToFile(sprintf($fileFormat, $key));
                 $sitemap->add(sprintf($urlFormat, $key));
             });

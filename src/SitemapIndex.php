@@ -42,9 +42,7 @@ class SitemapIndex implements Renderable, Responsable
 
     public function getSitemap(string $url): ?Sitemap
     {
-        return collect($this->tags)->first(function (Tag $tag) use ($url) {
-            return $tag->getType() === 'sitemap' && $tag->url === $url;
-        });
+        return collect($this->tags)->first(fn(Tag $tag) => $tag->getType() === 'sitemap' && $tag->url === $url);
     }
 
     public function hasSitemap(string $url): bool

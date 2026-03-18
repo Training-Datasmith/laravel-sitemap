@@ -7,8 +7,6 @@ use DateTimeInterface;
 
 class Sitemap extends Tag
 {
-    public string $url;
-
     public Carbon $lastModificationDate;
 
     public static function create(string $url): static
@@ -16,10 +14,8 @@ class Sitemap extends Tag
         return new static($url);
     }
 
-    public function __construct(string $url)
+    public function __construct(public string $url)
     {
-        $this->url = $url;
-
         $this->lastModificationDate = Carbon::now();
     }
 
