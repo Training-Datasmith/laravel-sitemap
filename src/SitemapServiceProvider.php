@@ -1,19 +1,14 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Spatie\Sitemap;
 
-use Spatie\LaravelPackageTools\Package;
-use Spatie\LaravelPackageTools\PackageServiceProvider;
-
-class SitemapServiceProvider extends PackageServiceProvider
+use Spatie\Laravel_Package_Tools\Package;
+use Spatie\Laravel_Package_Tools\Package_Service_Provider;
+class Sitemap_Service_Provider extends Package_Service_Provider
 {
-    public function configurePackage(Package $package): void
+    public function configure_package(Package $package): void
     {
-        $package
-            ->name('laravel-sitemap')
-            ->hasConfigFile()
-            ->hasViews();
+        $package->name('laravel-sitemap')->has_config_file()->has_views();
     }
 }

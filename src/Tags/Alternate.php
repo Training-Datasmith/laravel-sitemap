@@ -1,38 +1,29 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Spatie\Sitemap\Tags;
 
 class Alternate
 {
     public string $locale;
-
     public string $url;
-
     public static function create(string $url, string $locale = ''): static
     {
         return new static($url, $locale);
     }
-
     public function __construct(string $url, string $locale = '')
     {
-        $this->setUrl($url);
-
-        $this->setLocale($locale);
+        $this->set_url($url);
+        $this->set_locale($locale);
     }
-
-    public function setLocale(string $locale = ''): static
+    public function set_locale(string $locale = ''): static
     {
         $this->locale = $locale;
-
         return $this;
     }
-
-    public function setUrl(string $url = ''): static
+    public function set_url(string $url = ''): static
     {
         $this->url = $url;
-
         return $this;
     }
 }

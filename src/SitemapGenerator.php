@@ -1,208 +1,150 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Spatie\Sitemap;
 
 use Closure;
 use Illuminate\Support\Collection;
 use Spatie\Browsershot\Browsershot;
 use Spatie\Crawler\Crawler;
-use Spatie\Crawler\CrawlProfiles\CrawlProfile;
-use Spatie\Crawler\CrawlResponse;
-use Spatie\Crawler\JavaScriptRenderers\BrowsershotRenderer;
+use Spatie\Crawler\Crawl_Profiles\Crawl_Profile;
+use Spatie\Crawler\Crawl_Response;
+use Spatie\Crawler\Java_Script_Renderers\Browsershot_Renderer;
 use Spatie\Sitemap\Crawler\Profile;
 use Spatie\Sitemap\Tags\Url;
-
-class SitemapGenerator
+class Sitemap_Generator
 {
     protected Collection $sitemaps;
-
-    protected string $urlToBeCrawled;
-
+    protected string $url_to_be_crawled;
     /** @var callable */
-    protected $shouldCrawl;
-
+    protected $should_crawl;
     /** @var callable */
-    protected $hasCrawled;
-
-    protected ?Closure $configureCrawlerCallback = null;
-
+    protected $has_crawled;
+    protected ?Closure $configure_crawler_callback = null;
     protected int $concurrency = 10;
-
-    protected int $maximumTagsPerSitemap = 0;
-
-    protected ?int $maximumCrawlCount = null;
-
-    public static function create(string $urlToBeCrawled): static
+    protected int $maximum_tags_per_sitemap = 0;
+    protected ?int $maximum_crawl_count = null;
+    public static function create(string $url_to_be_crawled): static
     {
-        return app(static::class)->setUrl($urlToBeCrawled);
+        return app(static::class)->set_url($url_to_be_crawled);
     }
-
     public function __construct()
     {
         $this->sitemaps = new Collection([new Sitemap()]);
-
-        $this->hasCrawled = fn (Url $url, ?CrawlResponse $response = null): \Spatie\Sitemap\Tags\Url => $url;
+        $this->has_crawled = fn(Url $url, ?Crawl_Response $response = null): \Spatie\Sitemap\Tags\Url => $url;
     }
-
-    public function configureCrawler(Closure $closure): static
+    public function configure_crawler(Closure $closure): static
     {
-        $this->configureCrawlerCallback = $closure;
-
+        $this->configure_crawler_callback = $closure;
         return $this;
     }
-
-    public function setConcurrency(int $concurrency): static
+    public function set_concurrency(int $concurrency): static
     {
         $this->concurrency = $concurrency;
-
         return $this;
     }
-
-    public function setMaximumCrawlCount(int $maximumCrawlCount): static
+    public function set_maximum_crawl_count(int $maximum_crawl_count): static
     {
-        $this->maximumCrawlCount = $maximumCrawlCount;
-
+        $this->maximum_crawl_count = $maximum_crawl_count;
         return $this;
     }
-
-    public function maxTagsPerSitemap(int $maximumTagsPerSitemap = 50000): static
+    public function max_tags_per_sitemap(int $maximum_tags_per_sitemap = 50000): static
     {
-        $this->maximumTagsPerSitemap = $maximumTagsPerSitemap;
-
+        $this->maximum_tags_per_sitemap = $maximum_tags_per_sitemap;
         return $this;
     }
-
-    public function setUrl(string $urlToBeCrawled): static
+    public function set_url(string $url_to_be_crawled): static
     {
-        $this->urlToBeCrawled = $urlToBeCrawled;
-
+        $this->url_to_be_crawled = $url_to_be_crawled;
         return $this;
     }
-
-    public function shouldCrawl(callable $shouldCrawl): static
+    public function should_crawl(callable $should_crawl): static
     {
-        $this->shouldCrawl = $shouldCrawl;
-
+        $this->should_crawl = $should_crawl;
         return $this;
     }
-
-    public function hasCrawled(callable $hasCrawled): static
+    public function has_crawled(callable $has_crawled): static
     {
-        $this->hasCrawled = $hasCrawled;
-
+        $this->has_crawled = $has_crawled;
         return $this;
     }
-
-    public function getSitemap(): Sitemap
+    public function get_sitemap(): Sitemap
     {
-        $crawler = Crawler::create($this->urlToBeCrawled, config('sitemap.guzzle_options', []));
-
+        $crawler = Crawler::create($this->url_to_be_crawled, config('sitemap.guzzle_options', []));
         if (config('sitemap.execute_javascript')) {
-            if ($chromeBinaryPath = config('sitemap.chrome_binary_path')) {
+            if ($chrome_binary_path = config('sitemap.chrome_binary_path')) {
                 $browsershot = new Browsershot();
-                $browsershot->setChromePath($chromeBinaryPath);
-
-                $crawler->executeJavaScript(
-                    new BrowsershotRenderer($browsershot)
-                );
+                $browsershot->set_chrome_path($chrome_binary_path);
+                $crawler->execute_java_script(new Browsershot_Renderer($browsershot));
             } else {
-                $crawler->executeJavaScript();
+                $crawler->execute_java_script();
             }
         }
-
-        if (! is_null($this->maximumCrawlCount)) {
-            $crawler->limit($this->maximumCrawlCount);
+        if (!is_null($this->maximum_crawl_count)) {
+            $crawler->limit($this->maximum_crawl_count);
         }
-
-        $crawler
-            ->crawlProfile($this->getCrawlProfile())
-            ->concurrency($this->concurrency)
-            ->onCrawled(function (string $url, CrawlResponse $response): void {
-                $sitemapUrl = ($this->hasCrawled)(Url::create($url), $response);
-
-                if ($this->shouldStartNewSitemapFile()) {
-                    $this->sitemaps->push(new Sitemap());
-                }
-
-                if ($sitemapUrl) {
-                    $this->sitemaps->last()->add($sitemapUrl);
-                }
-            });
-
-        if ($this->configureCrawlerCallback) {
-            ($this->configureCrawlerCallback)($crawler);
+        $crawler->crawl_profile($this->get_crawl_profile())->concurrency($this->concurrency)->on_crawled(function (string $url, Crawl_Response $response): void {
+            $sitemap_url = ($this->has_crawled)(Url::create($url), $response);
+            if ($this->should_start_new_sitemap_file()) {
+                $this->sitemaps->push(new Sitemap());
+            }
+            if ($sitemap_url) {
+                $this->sitemaps->last()->add($sitemap_url);
+            }
+        });
+        if ($this->configure_crawler_callback) {
+            ($this->configure_crawler_callback)($crawler);
         }
-
         $crawler->start();
-
         return $this->sitemaps->first();
     }
-
-    public function writeToFile(string $path): static
+    public function write_to_file(string $path): static
     {
-        $sitemap = $this->getSitemap();
-
-        if ($this->maximumTagsPerSitemap) {
-            $sitemap = SitemapIndex::create();
-            $fileFormat = str_replace('.xml', '_%d.xml', $path);
-            $urlFormat = str_replace('.xml', '_%d.xml', $this->toUrlPath($path));
-
-            $this->sitemaps->each(function (Sitemap $item, int $key) use ($sitemap, $fileFormat, $urlFormat): void {
-                $item->writeToFile(sprintf($fileFormat, $key));
-                $sitemap->add(sprintf($urlFormat, $key));
+        $sitemap = $this->get_sitemap();
+        if ($this->maximum_tags_per_sitemap) {
+            $sitemap = Sitemap_Index::create();
+            $file_format = str_replace('.xml', '_%d.xml', $path);
+            $url_format = str_replace('.xml', '_%d.xml', $this->to_url_path($path));
+            $this->sitemaps->each(function (Sitemap $item, int $key) use ($sitemap, $file_format, $url_format): void {
+                $item->write_to_file(sprintf($file_format, $key));
+                $sitemap->add(sprintf($url_format, $key));
             });
         }
-
-        $sitemap->writeToFile($path);
-
+        $sitemap->write_to_file($path);
         return $this;
     }
-
-    protected function toUrlPath(string $filePath): string
+    protected function to_url_path(string $file_path): string
     {
-        $publicPath = rtrim(public_path(), '/').'/';
-
-        if (str_starts_with($filePath, $publicPath)) {
-            return '/'.substr($filePath, strlen($publicPath));
+        $public_path = rtrim(public_path(), '/') . '/';
+        if (str_starts_with($file_path, $public_path)) {
+            return '/' . substr($file_path, strlen($public_path));
         }
-
-        return '/'.basename($filePath);
+        return '/' . basename($file_path);
     }
-
-    protected function getCrawlProfile(): CrawlProfile
+    protected function get_crawl_profile(): Crawl_Profile
     {
-        $shouldCrawl = function (string $url) {
-            if (parse_url($url, PHP_URL_HOST) !== parse_url($this->urlToBeCrawled, PHP_URL_HOST)) {
+        $should_crawl = function (string $url) {
+            if (parse_url($url, PHP_URL_HOST) !== parse_url($this->url_to_be_crawled, PHP_URL_HOST)) {
                 return false;
             }
-
-            if (! is_callable($this->shouldCrawl)) {
+            if (!is_callable($this->should_crawl)) {
                 return true;
             }
-
-            return ($this->shouldCrawl)($url);
+            return ($this->should_crawl)($url);
         };
-
-        $profileClass = config('sitemap.crawl_profile', Profile::class);
-        $profile = new $profileClass($this->urlToBeCrawled);
-
+        $profile_class = config('sitemap.crawl_profile', Profile::class);
+        $profile = new $profile_class($this->url_to_be_crawled);
         if (method_exists($profile, 'shouldCrawlCallback')) {
-            $profile->shouldCrawlCallback($shouldCrawl);
+            $profile->should_crawl_callback($should_crawl);
         }
-
         return $profile;
     }
-
-    protected function shouldStartNewSitemapFile(): bool
+    protected function should_start_new_sitemap_file(): bool
     {
-        if (! $this->maximumTagsPerSitemap) {
+        if (!$this->maximum_tags_per_sitemap) {
             return false;
         }
-
-        $currentNumberOfTags = count($this->sitemaps->last()->getTags());
-
-        return $currentNumberOfTags >= $this->maximumTagsPerSitemap;
+        $current_number_of_tags = count($this->sitemaps->last()->get_tags());
+        return $current_number_of_tags >= $this->maximum_tags_per_sitemap;
     }
 }

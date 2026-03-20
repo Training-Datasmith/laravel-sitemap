@@ -1,26 +1,21 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Spatie\Sitemap\Crawler;
 
-use Spatie\Crawler\CrawlProfiles\CrawlProfile;
-
-class Profile implements CrawlProfile
+use Spatie\Crawler\Crawl_Profiles\Crawl_Profile;
+class Profile implements Crawl_Profile
 {
     /** @var callable */
     protected $callback;
-
-    public function __construct(protected string $baseUrl)
+    public function __construct(protected string $base_url)
     {
     }
-
-    public function shouldCrawlCallback(callable $callback): void
+    public function should_crawl_callback(callable $callback): void
     {
         $this->callback = $callback;
     }
-
-    public function shouldCrawl(string $url): bool
+    public function should_crawl(string $url): bool
     {
         return ($this->callback)($url);
     }
